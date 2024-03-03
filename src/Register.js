@@ -1,98 +1,103 @@
-import React, { useState } from "react";
+import React from "react";
+import emailjs from "emailjs-com";
 
-function Register() {
-	const [formData, setFormData] = useState({
-		firstName: "",
-		lastName: "",
-		email: "",
-		phone: "",
-		referralSource: "",
-	});
+const Register = () => {
+	// Initialize EmailJS with your public key (replace initialization if needed)
+	emailjs.init("TbMEX_EcYQ67mvmIX");
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData((prevState) => ({
-			...prevState,
-			[name]: value,
-		}));
+	const sendEmail = (e) => {
+		e.preventDefault(); // Prevents the default form submission action
+
+		// Sending email to the administrator
+		emailjs
+			.sendForm(
+				"service_28g1c54",
+				"template_dscgf8v",
+				e.target,
+				"TbMEX_EcYQ67mvmIX"
+			)
+			.then(
+				(result) => {
+					console.log("Admin Email Sent:", result.text);
+					// Once the admin email is sent, send the confirmation to the participant
+					sendConfirmationEmail(e.target);
+				},
+				(error) => {
+					console.log("Admin Email Error:", error.text);
+				}
+			);
 	};
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		// Here, you will handle form submission, e.g., sending data to Google Sheets and sending emails
-		console.log(formData);
+	const sendConfirmationEmail = (form) => {
+		// Sending confirmation email to the participant
+		emailjs
+			.sendForm(
+				"service_28g1c54",
+				"template_nimj5d9",
+				form,
+				"TbMEX_EcYQ67mvmIX"
+			)
+			.then(
+				(result) => {
+					console.log("Participant Email Sent:", result.text);
+					// Here, you could clear the form, show a success message, etc.
+				},
+				(error) => {
+					console.log("Participant Email Error:", error.text);
+				}
+			);
 	};
 
 	return (
-		<div className="register">
+		<div>
 			<h2>Register Now</h2>
-			<form onSubmit={handleSubmit}>
-				<input
-					type="text"
-					name="firstName"
-					placeholder="First Name"
-					value={formData.firstName}
-					onChange={handleChange}
-					required
-				/>
-				<input
-					type="text"
-					name="lastName"
-					placeholder="Last Name"
-					value={formData.lastName}
-					onChange={handleChange}
-					required
-				/>
-				<input
-					type="email"
-					name="email"
-					placeholder="Email"
-					value={formData.email}
-					onChange={handleChange}
-					required
-				/>
-				<input
-					type="text"
-					name="phone"
-					placeholder="Phone Number"
-					value={formData.phone}
-					onChange={handleChange}
-					required
-				/>
+			<form onSubmit={sendEmail}>
 				<div>
-					Where did you hear about us?
-					<label>
-						<input
-							type="radio"
-							name="referralSource"
-							value="Newspaper"
-							onChange={handleChange}
-						/>{" "}
-						Newspaper
-					</label>
-					<label>
-						<input
-							type="radio"
-							name="referralSource"
-							value="Online"
-							onChange={handleChange}
-						/>{" "}
-						Online
-					</label>
-					<label>
-						<input
-							type="radio"
-							name="referralSource"
-							value="Word of mouth"
-							onChange={handleChange}
-						/>{" "}
-						Word of mouth
-					</label>
+					<label>First Name:</label>
+					<input
+						type="text"
+						name="firstName"
+						required
+					/>
+				</div>
+				<div>
+					<label>Last Name:</label>
+					<input
+						type="text"
+						name="lastName"
+						required
+					/>
+				</div>
+				<div>
+					<label>Email:</label>
+					<input
+						type="email"
+						name="email"
+						required
+					/>
+				</div>
+				<div>
+					<label>Phone:</label>
+					<input
+						type="tel"
+						name="phone"
+					/>
+				</div>
+				<div>
+					<label>How did you hear about us?</label>
+					<select
+						name="referralSource"
+						required>
+						<option value="">Select one</option>
+						<option value="newspaper">Newspaper</option>
+						<option value="online">Online</option>
+						<option value="word of mouth">Word of Mouth</option>
+					</select>
 				</div>
 				<button type="submit">Submit</button>
 			</form>
 		</div>
 	);
-}
+};
 
 export default Register;
