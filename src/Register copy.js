@@ -1,18 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import emailjs from "emailjs-com";
 
 const Register = () => {
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [submissionMessage, setSubmissionMessage] = useState("");
-
+	// Initialize EmailJS with your public key (replace initialization if needed)
 	emailjs.init("TbMEX_EcYQ67mvmIX");
 
 	const sendEmail = (e) => {
-		e.preventDefault();
-		setIsSubmitting(true); // Indicate submission start
-		setSubmissionMessage(""); // Reset submission message
+		e.preventDefault(); // Prevents the default form submission action
 
-		// First, send email to the admin
+		// Sending email to the administrator
 		emailjs
 			.sendForm(
 				"service_28g1c54",
@@ -20,36 +16,42 @@ const Register = () => {
 				e.target,
 				"TbMEX_EcYQ67mvmIX"
 			)
-			.then((result) => {
-				console.log("Admin Email Sent:", result.text);
-				// Then, send confirmation email to the participant
-				return emailjs.sendForm(
-					"service_28g1c54",
-					"template_nimj5d9",
-					e.target,
-					"TbMEX_EcYQ67mvmIX"
-				);
-			})
-			.then((result) => {
-				setIsSubmitting(false); // End submission
-				alert("You have completed your registration. Thank you!");
-				setSubmissionMessage(
-					"Thank you for registering! Check your email for confirmation."
-				);
-				console.log("Participant Email Sent:", result.text);
-				// Optionally, reset the form here
-			})
+			.then(
+				(result) => {
+					console.log("Admin Email Sent:", result.text);
+					// Once the admin email is sent, send the confirmation to the participant
+					sendConfirmationEmail(e.target);
+				},
+				(error) => {
+					console.log("Admin Email Error:", error.text);
+				}
+			);
+	};
 
-			.catch((error) => {
-				setIsSubmitting(false); // End submission on error
-				setSubmissionMessage("Oops! Something went wrong. Please try again.");
-				console.log("Email Error:", error.text);
-			});
+	const sendConfirmationEmail = (form) => {
+		// Sending confirmation email to the participant
+		emailjs
+			.sendForm(
+				"service_28g1c54",
+				"template_nimj5d9",
+				form,
+				"TbMEX_EcYQ67mvmIX"
+			)
+			.then(
+				(result) => {
+					console.log("Participant Email Sent:", result.text);
+					// Here, you could clear the form, show a success message, etc.
+				},
+				(error) => {
+					console.log("Participant Email Error:", error.text);
+				}
+			);
 	};
 
 	return (
 		<div>
 			<h2>Register Now</h2>
+
 			<form onSubmit={sendEmail}>
 				<div>
 					<label>First Name:</label>
@@ -109,23 +111,8 @@ const Register = () => {
 						// Add more cities and towns as needed
 					</select>
 				</div>
-				<button
-					type="submit"
-					disabled={isSubmitting}>
-					{isSubmitting ? "Submitting..." : "Submit"}
-				</button>
+				<button type="submit">Submit</button>
 			</form>
-			{isSubmitting && <div>Loading...</div>}
-			{!isSubmitting && submissionMessage && (
-				<div
-					className={
-						submissionMessage.startsWith("Oops!")
-							? "submission-message error"
-							: "submission-message"
-					}>
-					{submissionMessage}
-				</div>
-			)}
 		</div>
 	);
 };

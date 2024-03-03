@@ -66,3 +66,17 @@ button:hover {
 .Description {
   margin-bottom: 20px;
 }
+
+.loading-spinner {
+  /* Styles for your loading spinner */
+}
+
+.submission-message {
+  margin-top: 20px;
+  color: #4CAF50; /* Success color */
+  /* Additional styling */
+}
+
+.submission-message.error {
+  color: #f44336; /* Error color */
+}
