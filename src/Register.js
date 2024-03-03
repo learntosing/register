@@ -51,6 +51,7 @@ const Register = () => {
 	return (
 		<div>
 			<h2>Register Now</h2>
+
 			<form onSubmit={sendEmail}>
 				<div>
 					<label>First Name:</label>
@@ -92,6 +93,22 @@ const Register = () => {
 						<option value="newspaper">Newspaper</option>
 						<option value="online">Online</option>
 						<option value="word of mouth">Word of Mouth</option>
+					</select>
+				</div>
+				<div>
+					<label>City or Town:</label>
+					<select
+						name="cityOrTown"
+						required>
+						<option value="">Please select</option>
+						<option value="Bellingham, WA">Bellingham, WA</option>
+						<option value="Mount Vernon, WA">Mount Vernon, WA</option>
+						<option value="Anacortes, WA">Anacortes, WA</option>
+						<option value="Sedro-Woolley, WA">Sedro-Woolley, WA</option>
+						<option value="Burlington, WA">Burlington, WA</option>
+						<option value="Lynden, WA">Lynden, WA</option>
+						<option value="Ferndale, WA">Ferndale, WA</option>
+						// Add more cities and towns as needed
 					</select>
 				</div>
 				<button type="submit">Submit</button>

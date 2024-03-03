@@ -3,6 +3,13 @@ import React from "react";
 function Description() {
 	return (
 		<div className="Description">
+			<div>
+				<img
+					src={`${process.env.PUBLIC_URL}/Toppers.png`}
+					alt="Mount Baker Toppers Logo"
+					style={{ maxWidth: "100%", height: "auto" }}
+				/>
+			</div>
 			<h1>Learn to sing with the Mount Baker Toppers!</h1>
 			<p>
 				This group is here to reignite (or spark!) your passion for singing.
